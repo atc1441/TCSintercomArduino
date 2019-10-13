@@ -18,7 +18,7 @@
    2ms delay 0 bit
 */
 
-const uint32_t Klingeln = 0x0361987F;
+const uint32_t Klingeln = 0x0361987F;// serial: 36198 HEX = 221592 change to your seriall.
 
 void setup() {
   pinMode(outputPin, OUTPUT);
