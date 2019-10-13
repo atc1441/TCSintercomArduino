@@ -14,3 +14,9 @@ TCSparserUNOMitCOMP: use internal comparator of Arduino UNO on pin D6 and D7.
 For all sketches see the Video for Schmeatic.
 
 Happy Intercom Hacking!
+
+
+
+
+
+See this Repo for another aproach from another guy who is using the TCS intercom: https://github.com/Syralist/tcs-monitor
