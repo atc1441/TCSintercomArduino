@@ -9,9 +9,9 @@ The Different sketches can be used like this:
 
 ### TCSparserUNO: use external comparator on Interrupt pin D2, can be used with TCS software
 
-### TCSparserUNOMitCOMP: use internal comparator of Arduino UNO on pin D6 and D7.
+### TCSparserUNOMitCOMP: use internal comparator of Arduino UNO on pin D6 and D7, can be used with TCS software.
 
-
+### AnalogINparserESP8266: Parse incoming Bus messages via Analog in without interrupt on ESP8266/ not as reliable as the interrupt ones because the AnalogIn needs to be called as much as possible.
 
 For all sketches see the Video for Schmeatic.
 
