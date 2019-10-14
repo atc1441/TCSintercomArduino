@@ -128,7 +128,13 @@ void SendeSerCMD(String outString) {
   Serial.print(outString);
   Serial.write(0x04);
 }
-
+//it is better to also give an arg with the length because it 
+//is possible that there is a 4Byte protokoll smaller than 0xFFFF
+//something like void sendeProtokollHEX(uint32_t protokoll,byte firstBit) {
+//  int length = 16;
+//  byte checksm = 1;
+//  if (firstBit) length = 32;
+//and so on...
 void sendeProtokollHEX(uint32_t protokoll) {
   int length = 16;
   byte checksm = 1;
