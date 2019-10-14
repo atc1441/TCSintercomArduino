@@ -5,6 +5,7 @@
 #define zeroBit 2//ms
 
 volatile uint32_t CMD = 0;
+volatile uint8_t lengthCMD = 0;
 volatile bool cmdReady;
 
 ISR(ANALOG_COMP_vect ) {
@@ -71,6 +72,7 @@ ISR(ANALOG_COMP_vect ) {
     curPos = 0;
     if (curCRC == calCRC) {
       cmdReady = 1;
+      lengthCMD = curLength;
       CMD = curCMD;
     }
     curCMD = 0;
@@ -135,6 +137,13 @@ void SendeSerCMD(String outString) {
   Serial.write(0x04);
 }
 
+//it is better to also give an arg with the length because it 
+//is possible that there is a 4Byte protokoll smaller than 0xFFFF
+//something like void sendeProtokollHEX(uint32_t protokoll,byte firstBit) {
+//  int length = 16;
+//  byte checksm = 1;
+//  if (firstBit) length = 32;
+//and so on...
 void sendeProtokollHEX(uint32_t protokoll) {
   int length = 16;
   byte checksm = 1;
@@ -160,8 +169,7 @@ void sendeProtokollHEX(uint32_t protokoll) {
 }
 
 void printHEX(uint32_t DATA) {
-  uint8_t numChars = 4;
-  if (DATA >= 0xFFFF) numChars = 8;
+  uint8_t numChars = lengthCMD ? 8 :4;
   uint32_t mask  = 0x0000000F;
   mask = mask << 4 * (numChars - 1);
   for (uint32_t i = numChars; i > 0; --i) {
