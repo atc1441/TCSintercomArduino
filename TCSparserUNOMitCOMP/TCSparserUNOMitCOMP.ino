@@ -89,7 +89,7 @@ void setup() {
    (1 << ACI) |    // Analog Comparator Interrupt Flag: Clear Pending Interrupt
    (1 << ACIE) |   // Analog Comparator Interrupt: Enabled
    (0 << ACIC) |   // Analog Comparator Input Capture: Disabled
-   (0 << ACIS1) | (0 << ACIS0);   // Analog Comparator Interrupt Mode: Comparator Interrupt on Rising Output Edge
+   (0 << ACIS1) | (0 << ACIS0);   // Analog Comparator Interrupt Mode: Comparator Interrupt on changing Edge
 }
 
 String inData;
