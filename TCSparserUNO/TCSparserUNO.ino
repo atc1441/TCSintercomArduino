@@ -5,6 +5,7 @@
 #define zeroBit 2
 
 volatile uint32_t CMD = 0;
+volatile uint8_t lengthCMD = 0;
 volatile bool cmdReady;
 
 void analyzeCMD() {
@@ -70,6 +71,7 @@ void analyzeCMD() {
     cmdIntReady = 0;
     if (curCRC == calCRC) {
       cmdReady = 1;
+      lengthCMD = curLength;
       CMD = curCMD;
     }
     curCMD = 0;
@@ -160,8 +162,7 @@ void sendeProtokollHEX(uint32_t protokoll) {
 }
 
 void printHEX(uint32_t DATA) {
-  uint8_t numChars = 4;
-  if (DATA >= 0xFFFF) numChars = 8;
+  uint8_t numChars = lengthCMD ? 8 :4;
   uint32_t mask  = 0x0000000F;
   mask = mask << 4 * (numChars - 1);
   for (uint32_t i = numChars; i > 0; --i) {
