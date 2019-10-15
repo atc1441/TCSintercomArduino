@@ -7,6 +7,8 @@ The Different sketches can be used like this:
 
 ### OnlySendOneBell: Send one call command to a defined serial number, see video demo.
 
+### SendCallToSpecificSerialNr: You can simply enter the serial nr. you want to call via "normal" numbers and it will calculate the cmd for you.
+
 ### TCSparserUNO: use external comparator on Interrupt pin D2, can be used with TCS software
 
 ### TCSparserUNOMitCOMP: use internal comparator of Arduino UNO on pin D6 and D7, can be used with TCS software.
