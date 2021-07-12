@@ -1,4 +1,4 @@
-# TCSintercomArduino
+# TCS intercom Arduino
 
 Here are the sketches for the following youtube video.
 
