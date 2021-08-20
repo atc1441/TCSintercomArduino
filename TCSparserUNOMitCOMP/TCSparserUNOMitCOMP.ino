@@ -20,7 +20,9 @@ ISR(ANALOG_COMP_vect ) {
   uint32_t timeInUS = usNow - usLast;
   usLast = usNow;
   byte curBit = 4;
-  if (timeInUS >= 1000 && timeInUS <= 2999) {
+  if (timeInUS < 1000) {
+    curBit = 5; // invalid glitches typical 29ms
+  } else if (timeInUS >= 1000 && timeInUS <= 2999) {
     curBit = 0;
   } else if (timeInUS >= 3000 && timeInUS <= 4999) {
     curBit = 1;
@@ -31,51 +33,53 @@ ISR(ANALOG_COMP_vect ) {
     curPos = 0;
   }
 
-  if (curPos == 0) {
-    if (curBit == 2) {
-      curPos++;
-    }
-    curCMD = 0;
-    curCRC = 0;
-    calCRC = 1;
-    curLength = 0;
-  } else if (curBit == 0 || curBit == 1) {
-    if (curPos == 1) {
-      curLength = curBit;
-      curPos++;
-    } else if (curPos >= 2 && curPos <= 17) {
-      if (curBit)bitSet(curCMD, (curLength ? 33 : 17) - curPos);
-      calCRC ^= curBit;
-      curPos++;
-    } else if (curPos == 18) {
-      if (curLength) {
+  if (curBit != 5) { // skip processing for glitches
+    if (curPos == 0) {
+      if (curBit == 2) {
+        curPos++;
+      }
+      curCMD = 0;
+      curCRC = 0;
+      calCRC = 1;
+      curLength = 0;
+    } else if (curBit == 0 || curBit == 1) {
+      if (curPos == 1) {
+        curLength = curBit;
+        curPos++;
+      } else if (curPos >= 2 && curPos <= 17) {
+        if (curBit)bitSet(curCMD, (curLength ? 33 : 17) - curPos);
+        calCRC ^= curBit;
+        curPos++;
+      } else if (curPos == 18) {
+        if (curLength) {
+          if (curBit)bitSet(curCMD, 33 - curPos);
+          calCRC ^= curBit;
+          curPos++;
+        } else {
+          curCRC = curBit;
+          cmdIntReady = 1;
+        }
+      } else if (curPos >= 19 && curPos <= 33) {
         if (curBit)bitSet(curCMD, 33 - curPos);
         calCRC ^= curBit;
         curPos++;
-      } else {
+      } else if (curPos == 34) {
         curCRC = curBit;
         cmdIntReady = 1;
       }
-    } else if (curPos >= 19 && curPos <= 33) {
-      if (curBit)bitSet(curCMD, 33 - curPos);
-      calCRC ^= curBit;
-      curPos++;
-    } else if (curPos == 34) {
-      curCRC = curBit;
-      cmdIntReady = 1;
+    } else {
+      curPos = 0;
     }
-  } else {
-    curPos = 0;
-  }
-  if (cmdIntReady) {
-    cmdIntReady = 0;
-    curPos = 0;
-    if (curCRC == calCRC) {
-      cmdReady = 1;
-      lengthCMD = curLength;
-      CMD = curCMD;
+    if (cmdIntReady) {
+      cmdIntReady = 0;
+      curPos = 0;
+      if (curCRC == calCRC) {
+        cmdReady = 1;
+        lengthCMD = curLength;
+        CMD = curCMD;
+      }
+      curCMD = 0;
     }
-    curCMD = 0;
   }
 }
 
